@@ -9,17 +9,35 @@
 
 		<!-- JavaScript file -->
 		<!-- defer - this file will load after the DOM loads -->
+		<script defer src="src/secrets.js"></script>
 		<script defer src="src/poke.js"></script>
 		<script defer src="src/nasa.js"></script>
-		<script defer src="src/lotr.js"></script>
 
 		<title>External APIs</title>
 	</head>
 	<body>
+		<form id="poke-search">
+			<input type="text" name="search" placeholder="Search For a Pokemon" />
+			<input type="submit" value="Search" />
+		</form>
+		<form id="ability-search">
+			<input
+				type="text"
+				name="ability-search"
+				placeholder="Search For an Ability"
+			/>
+			<input type="submit" value="Search" />
+		</form>
+
+		<hr />
+		<h2>POKEMON</h2>
+		<hr />
 		<div id="poke-container"></div>
 		<hr />
+		<button id="apod-btn">APOD</button>
+		<button id="mars-btn">MARS</button>
 		<div id="nasa-container"></div>
-		<hr />
-		<div id="lotr-container"></div>
+		<!-- <hr /> -->
+		<!-- <div id="lotr-container"></div> -->
 	</body>
 </html>
