@@ -89,6 +89,14 @@ const projects = [
     link: "https://gamesrx.netlify.app",
     image: "https://i.imgur.com/Japzh6v.png",
   },
+  {
+    id: 26,
+    name: "IFDK",
+    about: "Game info and reviews",
+    phase: 4,
+    link: "https://gamesrx.netlify.app",
+    image: "https://i.imgur.com/Japzh6v.png",
+  },
 ];
 
 export default projects;
