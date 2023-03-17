@@ -1,10 +1,32 @@
 import { useState } from "react"
 
 import Header from "./components/Header"
-import ProjectForm from "./components/ProjectForm"
+// import ProjectForm from "./components/ProjectForm"
+import ProjectFormState from "./components/ProjectFormState"
 import ProjectList from "./components/ProjectList"
 import SearchInput from "./components/SearchInput"
 import PhaseFilters from "./components/PhaseFilters"
+
+/* 
+
+	Warmup Questions!
+
+	1. What is 'lifting' state?
+		- Moving state up from the child to the parent
+		- Pass down props as needed
+		- Package state/setter functions/state functionality inside of functions, to limit the amount of indiviual props we are passing down
+
+	2. What happens when state is changed?
+		- Component TREE re-renders
+
+	3. What kind of function is the setState?
+		- asynchronous
+			- ex:
+				console.log(state)
+				setState(newState)
+				console.log(state) // THIS WILL ALWAYS DRAG
+				
+*/
 
 const App = () => {
 	const [projectState, setProjectState] = useState([])
@@ -38,7 +60,8 @@ const App = () => {
 				firstProject={projectState[0]}
 				searchQuery={searchQuery}
 			/>
-			<ProjectForm />
+			{/* <ProjectForm setProjectState={setProjectState} /> */}
+			<ProjectFormState setProjectState={setProjectState} />
 			<button onClick={handleLoadProjects}>Load Projects</button>
 
 			<section>
