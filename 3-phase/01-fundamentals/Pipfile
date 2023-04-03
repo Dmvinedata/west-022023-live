@@ -6,6 +6,7 @@ name = "Python Fundamentals"
 [packages]
 pytest = "*"
 ipdb = "*"
+requests = "*"
 
 [dev-packages]
 
