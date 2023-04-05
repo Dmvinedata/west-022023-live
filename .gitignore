@@ -3,3 +3,4 @@ mocks-and-labs
 code-challenges
 # 1-phase/09-external-apis/src/secrets.js
 *.env
+*.venv

@@ -111,7 +111,6 @@ print(pet_names)
 print(pet_names.clear())  # REturn NONE
 print(pet_names)
 
-os.system('clear')
 
 # Tuple
 # 📚 Review With Students:
@@ -170,7 +169,7 @@ print(range_2)
 # 24. ✅ Create a set of 3 pet foods
 pet_foods = {"purina", "kibble", "steak"}
 
-os.system("clear")
+
 # ! OBJECTS
 # Dictionaries
 # Creating
@@ -208,7 +207,7 @@ print(pet_info_2)
 
 # Deleting
 # 30. ✅ Delete a pets age using the "del" keyword
-del(pet_info["age"])
+del (pet_info["age"])
 print(pet_info)
 
 
@@ -222,9 +221,8 @@ pet_info_2.popitem()
 print(pet_info_2)
 
 
-
 # Demo Loops
-pet_info = [
+info = [
     {
         'name': 'rose',
         'age': 11,
@@ -242,19 +240,35 @@ pet_info = [
     }
 ]
 
+os.system('clear')
+
 # 33. ✅ Loop through a range of 10 and print every number within the range
+# for num in range(1,10):
+#     print(num)
 
 
 # 34. ✅ Loop through a range between 50 and 60 that iterates by 2 and print every number
+# for num in range(50,60,2):
+#     print(num)
 
 
-# 35. ✅ Loop through the "pet_info" list and print every dictionary
+# 35. ✅ Loop through the "info" list and print every dictionary
+# for pet_dict in info:
+#     print(pet_dict)
+#     # print(pet_dict.get('name'))
 
 
 # 36. ✅ Create a function that takes a list as an argument
 # The function should use a "for" loop to loop through the list and print every item
 # Invoke the function and pass it "pet_names" as an argument
 
+def print_info(lst):
+    for item in lst:
+        print(item)
+
+
+print_info(info)
+print_info(["a", "b"])
 
 # 37. ✅ Create a function that takes a list as an argument. (simple example)
 #   The function should define a counter and set it to 0
@@ -262,6 +276,17 @@ pet_info = [
 #   The loop will continue as long as the counter is less than the length of the list
 #   Every loop should increase the count by 1
 #   Return the counter
+
+
+def my_count(lst):
+    counter = 0
+    while (counter < len(lst)):
+        # print(lst[counter])
+        counter += 1
+    return counter
+
+
+print(my_count([1, 1, 1, 1, 1, 1, 1, 1, 1, 1]))
 
 
 # 38. ✅ Create a function that updates the age of a given pet
@@ -272,18 +297,71 @@ pet_info = [
 #   Every list will increase the index by 1
 #   If the dict containing a matching name is found, update the item's age with the new age
 #   Otherwise, return 'pet not found'
+def update_pet_age(pet_info, find_name, new_age):
+    idx = 0
+    # ipdb.set_trace()
+    while (pet_info[idx].get("name") != find_name and idx < len(pet_info) - 1):
+        idx += 1
+    # print(idx)
+    if pet_info[idx].get("name") == find_name:
+        pet_info[idx]['age'] = new_age
+        # pet_info[idx].update({"age": new_age})
+        return pet_info[idx]
+    else:
+        return "Pet Not Found"
 
+
+print(update_pet_age(info, "asgjfvasjfhgsa", 13))
+
+
+# ! DEtour into Truthiness.
+#   Types have inherant booleans
+#   Data can be either Truthy or Falsey
+#   Things that are truthy eval to true
+#   Things that are falsey eval to false
+# Is Truthiness the same across all languages
 
 # map like
 # 39. ✅ Use list comprehension to return a list containing every pet name from "pet_info" changed to uppercase
+# ? JS info.map(obj => obj.name.toUpperCase())
+def py_map(info):
+    # lst = list()
+    for pet in info:
+        pet['name'] = pet.get('name').upper()
+        # ipdb.set_trace()
+    return info
+
+# pet_upper = [pet['name'].upper() for pet in info]
+# # print(py_map(info))
+# print(pet_upper)
 
 
 # find like
 # 40. ✅ Use list comprehension to find a pet named spot
+def find_spot(info, pet_name):
+    for pet in info:
+        if pet.get('name') == pet_name:
+            return f"Found {pet_name}"
+        # else: 
+        #     return "wooow"
+    return "Not Found..."
 
+
+spot_find = [ f"Found Spot" for pet in info if pet.get("name") == "spot" ]
+print(find_spot(info, "rose"))
 
 # filter like
 # 41. ✅ Use list comprehension to find all of the pets under 3 years old
+def find_younglings(info, max_age):
+    lst = list()
+    for pet in info:
+        if pet.get('age') < max_age:
+            lst.append(pet)
+    return lst
 
+def do_soimething():
+    pass
+
+print(find_younglings(info, 13))
 
 # 43. ✅ Create a generator expression matching the filter above. Compare and contrast the generator to the list comprehension.
