@@ -1,0 +1,7 @@
+-- Find Black Sabbath
+SELECT * 
+from artists
+-- Find where name is Black Sabbath
+-- WHERE conditional 
+-- WHERE name is "Black Sabbath";
+WHERE name like '%Black%';

@@ -1,0 +1,3 @@
+-- Get all the artists
+-- ACTION , Columns to return, from Table
+SELECT * from artists;

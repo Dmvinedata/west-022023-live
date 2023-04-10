@@ -6,19 +6,62 @@ Tools:
 - SQLite Browser => Visual User Interface for interacting with sql/sqlite3
 - chinook database => Microsoft curated Open source database
 - PostgreSQL(elephant)
-
 - MySQL(2) => Library that interacts with db
+
   NoSQL
 - MongoDB (Non-Relational Dbs)
 
 ## What is SQL?
+  - Structured Query Language
+  - language used to communicate with a database (db)
+  - Are SQL Only jobs
+  - Request / Response Cycle 
+      - Req => is in the form of a SQL query (just a string with parameters)
+      - Res => The return data that satisfies the query 
+  - RELATIONAL DATABASE
+    - Each Table can communicate with anotyher
+    - We can define a RELATIONSHIP/ASSOCIATION between
+  - Single Source of Truth!
+    - There is one variable of one item
+      - NO DUPLICATES
+      - If you need to know how many Users exist in the table, you need to Calc instead of holding onto an extra variable
+    - Benifits
+      - Accurate Data
+        - Not relying on updating all associated vars
+      - easier to debug
+      - Uses less memory
 
+## Why use SQL databases?
+  - Great Tool for large datasets
+  - Simple to Use
+  - Fast
+  - Information can Persist
+  - Relational Database
 
 ## What is SQL used for?
+  - Applicant Tracking System
+    - Handling User data
+  - Assets in a game
 
 
 ## What kind of operations can we do in SQL?
+  - Create (Write, add)
+  - Read (select, sort, group...)
+  - Update
+  - Delete
 
+## What are the Datatypes in SQL/db?
+  - TEXT
+  - INT (INTEGER)
+  - BIGINT
+  - FLOAT
+  - REAL
+  - BLOB => BINARY LARGE OBJECT
+  - BOOLEAN
+  - CHAR
+  - DATE
+  - DATETIME
+  - TIMESTAMP
 
 
 ## How to make SQL Queries
