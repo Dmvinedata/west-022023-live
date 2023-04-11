@@ -56,7 +56,16 @@
         - Mainly for Devs to write their code in their fav langauge instead of having to always write out SQL queries
         - Makes our code more modular and reusable (DRY code)
 
-
+    How is the SQLite3 package working?
+        CURSOR.execute() returns a cursor object with the data to make the query
+        - For all READ queries
+            - Select, Where..
+            - In order to read the cursor, 
+                - CURSOR.execute(read_query).fetchone() or fetchall()...
+        - For any ACTION queries
+            - INSERT, UPDATE, DELETE
+                - After we make the execute, we need to COMMIT the transaction
+                - CONN.commit()
  """
 
 
@@ -73,38 +82,31 @@ class Pet:
     all = []
 
     # ✅ 1. Add "__init__" with "name", "species", "breed", "temperament", and "id" (Default: None) Attributes
-    def __init__(self, name, species, breed, temperament, id=None):
+    def __init__(self, name, species, breed, temperament, owner_id, id=None):
         # All of the attr are aligned with the columns in the database
         self.name = name
         self.species = species
         self.breed = breed
-        # OUr id starts at None because we will update this instance with the ID from the database
         self.temperament = temperament
+        self.owner_id = owner_id
         self.id = id
 
     # ✅ 2. Add "create_table" Class Method to Create "pets" Table If Doesn't Already Exist
 
     @classmethod
     def create_table(cls):
-        # single_line = "CREATE TABLE IF NOT EXISTS pets ( id INTEGER PRIMARY KEY, name TEXT, species TEXT, breed TEXT, temperament )"
         create_table_sql = """ 
             CREATE TABLE IF NOT EXISTS pets (
                 id INTEGER PRIMARY KEY,
                 name TEXT,
                 species TEXT,
                 breed TEXT,
-                temperament INTEGER
+                temperament INTEGER,
+                owner_id INTEGER
             )
            """
-        # print(create_table_sql)
-        # ipdb.set_trace()
-        # Take the sql string and Execute on the db
         CURSOR.execute(create_table_sql)
         print("Created Table...")
-
-    @classmethod
-    def show_all_pets(cls):
-        CURSOR.execute("SELECT * FROM pets")
 
     # ✅ 3. Add "drop_table" Class Method to Drop "pets" Table If Exists
 
@@ -120,16 +122,14 @@ class Pet:
 
     def save(self):
         save_sql = """
-            INSERT INTO pets (name, species, breed, temperament)
-            VALUES (?, ?, ?, ?);
+            INSERT INTO pets (name, species, breed, temperament, owner_id)
+            VALUES (?, ?, ?, ?, ?);
         """
-        # Question Marks in the HEREDOC Strings are placeholders for args in the execute
-        # ipdb.set_trace()
+        # CURSOR.execute INSERT => Opens a active Tranaction
         CURSOR.execute(save_sql, (self.name, self.species,
-                       self.breed, self.temperament))
-
+                       self.breed, self.temperament, self.owner_id))
+        CONN.commit()
         self.id = CURSOR.lastrowid
-        Pet.all.append(self)
         print(f"Saved with id: {self.id}...")
 
     # ✅ 5. Add "create" Class Method to Initialize and Save New "pet" Instances to DB
@@ -145,6 +145,7 @@ class Pet:
             species=row[2],
             breed=row[3],
             temperament=row[4],
+            owner_id=row[5],
             id=row[0]
         )
         return pet_inst
@@ -187,8 +188,6 @@ class Pet:
         print(row)
         return row if row else None
 
-        # If No "pet" Found, return "None"
-
     # ✅ 9. Add "find_by_id" Class Method to Retrieve "pet" Instance by "id" Attribute From DB
     @classmethod
     def find_by_id(cls, search_id):
@@ -199,12 +198,61 @@ class Pet:
         """
         row = CURSOR.execute(sql, (search_id,)).fetchone()
         # print(row)
-        return row if row else None
+        return Pet.new_from_db(row) if row else None
 
     # ✅ 10. Add "find_or_create_by" Class Method to:
 
-        #  Find and Retrieve "pet" Instance w/ All Attributes
+    @classmethod
+    def find_or_create_by(cls, name, species, breed, temperament, owner_id ):
+        find_sql = """
+            SELECT * FROM pets
+            WHERE (name, species, breed, temperament, owner_id) = (?, ?, ?, ?, ?)
+            LIMIT 1
+        """
+        found_row = CURSOR.execute(find_sql, (name, species, breed, temperament, self.owner_id)).fetchone()
+        print(found_row)
+        if found_row:
+            return found_row
+        else:
+            new_pet = cls(name=name, species=species, breed=breed, temperament=temperament, owner_id=owner_id)
+            new_pet.save()
 
-        # If No "pet" Found, Create New "pet" Instance w/ All Attributes
 
-    # ✅ 11. Add "update" Class Method to Find "pet" Instance by "id" and Update All Attributes
+    # ✅ 11. Add "update" INSTANCE Method to Find "pet" Instance by "id" and Update All Attributes
+    def update(self, name=None, species=None, breed=None, temperament=None, owner_id=None ):
+        update_sql = """
+            UPDATE pets
+            SET name = ?,
+                breed = ?,
+                species = ?,
+                temperament = ?,
+                owner_id = ?
+            WHERE id = ?
+        """
+        # ipdb.set_trace()
+        CURSOR.execute(update_sql, (name, species, breed, temperament, owner_id, self.id))
+        # with error handling
+        # CURSOR.execute(update_sql, ( 
+        #     name if name else self.name, 
+        #     species if species else self.species, 
+        #     breed if breed else self.breed, 
+        #     temperament if temperament else self.temperament, 
+        #     self.id
+        # ))
+        CONN.commit()
+
+    def delete_from_db(self):
+        delete_sql = """
+            DELETE FROM pets 
+            WHERE id = ?
+        """
+        CURSOR.execute(delete_sql, (self.id,))
+        CONN.commit()
+
+    def get_owner(self):
+        sql = """
+            SELECT * FROM owners
+            WHERE id = ?
+        """
+        owner = CURSOR.execute(sql, (self.owner_id,)).fetchone()
+        print(owner)
