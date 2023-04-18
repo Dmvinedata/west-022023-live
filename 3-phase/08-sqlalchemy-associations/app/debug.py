@@ -5,22 +5,28 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from ipdb import set_trace
 
-from models import (Base, Pet, Handler, Job)
+from models import (Base, Pet, Owner, Handler, Job)
 
 if __name__ == '__main__':
+    # CONN
     engine = create_engine('sqlite:///pet_app.db')
     Base.metadata.create_all(engine)
    
+    # CURSOR
     Session = sessionmaker(bind=engine)
     session = Session()
-
-
+ 
     #3✅ One to Many
     #Getting an owners pets
     #Use session.query and first to grab the first owner
+    all_owners = session.query(Owner).all()
+    first_owner = session.query(Owner).first()
+    first_owners_pets = first_owner.pets
 
     #use session.query and filter_by to get the owners pets from Pet
-   
+    
+    first_pet = session.query(Pet).first()
+    pet_owner = session.query(Owner).filter_by(id = first_pet.owner_id)
     #print out your owners pets
   
 
