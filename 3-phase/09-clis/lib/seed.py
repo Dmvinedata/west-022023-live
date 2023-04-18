@@ -39,5 +39,4 @@ if __name__ == '__main__':
   session.add_all([i1,i2,i3,i4])
   session.commit()
 
-  session.commit()
   print("DONE!")

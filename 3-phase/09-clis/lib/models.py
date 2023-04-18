@@ -31,6 +31,7 @@ class Store(Base):
   address = Column(String())
 
   items = relationship("Item", backref=backref("store"))
+    
 
   def __repr__(self):
     return f'Store(id={self.id}), ' + \
