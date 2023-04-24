@@ -1,6 +1,7 @@
 lab_groups.rb
 mocks-and-labs
 code-challenges
+projects
 # 1-phase/09-external-apis/src/secrets.js
 *.env
 *.venv
