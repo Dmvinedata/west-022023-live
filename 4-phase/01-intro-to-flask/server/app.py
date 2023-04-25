@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
+from flask import Flask
 
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///app.db'
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # 📚 Review With Students:
     # Request-Response Cycle
     # Web Servers and WSGI/Werkzeug
@@ -27,6 +31,9 @@
     # Run in Terminal
 		# export FLASK_APP=app.py
 		# export FLASK_RUN_PORT=5555
+    # printenv FLASK_APP FLASK_RUN_PORT
+    # => app.py \ 5555
+    # ! Now we will use `flask db` in place of `alembic` for our terminal commands
 		# flask db init
 		# flask db revision --autogenerate -m 'Create tables productions'
 		# flask db upgrade
@@ -43,7 +50,7 @@
         #  def index():
         #    return '<h1>Hello World!</h1>'`
 
-# 13. ✅ Run the server with `flask run` and verify your route in the browser at `http://localhost:5000/`
+# 13. ✅ Run the server with `flask run` and verify your route in the browser at `http://localhost:5555/`
 
 # 14. ✅ Create a dynamic route
 # `@app.route('/productions/<string:title>')

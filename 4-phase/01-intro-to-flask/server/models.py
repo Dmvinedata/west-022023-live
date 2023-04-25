@@ -8,8 +8,23 @@ from flask_sqlalchemy import SQLAlchemy
     # What SQLAlchemy() is replacing from SQLAlchemy in phase 3
      
 db = SQLAlchemy()
-# 1. ✅ Create a Production Model
-	# tablename = 'Productions'
-	# Columns:
-        # title: string, genre: string, budget:float, image:string,director: string, description:string, ongoing:boolean, created_at:date time, updated_at: date time 
+# ? Optional Destructuring
+
+# 1. ✅ Create a Song Model
+	# tablename = 'Songs'
+class Song(db.Model):
+    __tablename__ = "songs"
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
+    genre = db.Column(db.String)
+    length = db.Column(db.String)
+    plays = db.Column(db.Integer)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    created_at = db.Column(db.DateTime, onupdate=db.func.now())
+
+# Stretch
+# Create the Samples and Join Tables
+
+# class Song()
 # 2. ✅ navigate to app.py
