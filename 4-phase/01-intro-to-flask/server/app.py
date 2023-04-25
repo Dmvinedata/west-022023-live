@@ -1,9 +1,4 @@
 #!/usr/bin/env python3
-from flask import Flask
-
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///app.db'
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # 📚 Review With Students:
     # Request-Response Cycle
     # Web Servers and WSGI/Werkzeug
