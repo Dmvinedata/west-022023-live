@@ -1,8 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
-
+from sqlalchemy_serializer import SerializerMixin
 db = SQLAlchemy()
 
-class Song(db.Model):
+class Song(db.Model, SerializerMixin):
     __tablename__  = "songs"
 
     id = db.Column(db.Integer, primary_key=True)
