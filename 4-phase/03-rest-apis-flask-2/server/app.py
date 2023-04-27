@@ -20,11 +20,12 @@
 
  """
 from ipdb import set_trace
-from flask import Flask, jsonify, make_response, request
+from flask import Flask, jsonify, make_response, request, abort
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
-from models import db, Song
+from models import db, Song, Sample, SongSample
 
+from werkzeug.exceptions import NotFound
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -70,6 +71,12 @@ class Songs(Resource):
         db.session.commit()
         # return the created song to our client
         return make_response(new_song.to_dict(), 201)
+    
+    def options(self):
+        return "OPTIONS?"
+    
+    # def link(self):
+    #     return "LINK"
         
 
 api.add_resource(Songs, "/songs")
@@ -81,13 +88,45 @@ class SongByID(Resource):
     # def get(self, id, other):
         # return {"id": id, "other": other}
     def get(self, song_id):
-        set_trace()
-        found_song = Song.query.filter_by(id=song_id).first().to_dict()
-        return make_response(found_song, 200)
+        found_song = Song.query.filter_by(id=song_id).first()
+        if not found_song:
+            # abort(404, f"Couldn't find song of id: {song_id}")
+            raise NotFound
+        return make_response(found_song.to_dict(), 200)
 
-    # ! TEST POST 
-    def post(self, song_id):
-        return song_id
+
+    # ! UPDATE ROUTE
+    def patch(self, song_id):
+        found_song = Song.query.filter(Song.id == song_id).first()
+        if not found_song:
+            abort(404, f"Couldn't find song of id: {song_id}")
+            # == return make_response({message: "BAD ID"}, 404)
+        form_data = request.get_json()
+        # found_song.title = form_data["title"], etc...
+        for key in form_data:
+            setattr(found_song, key, form_data[key])
+
+        db.session.add(found_song)
+        db.session.commit()
+
+        return make_response(found_song.to_dict(), 200)
+
+    # ! DELETE ROUTE
+    def delete(self, song_id):
+        found_song = Song.query.filter(Song.id == song_id).first()
+        if not found_song:
+            abort(404, f"Couldn't find song of id: {song_id}")
+
+        db.session.delete(found_song)
+        db.session.commit()
+        # set_trace()
+        
+        # OPTION 1 RETURN NOTHING
+        return make_response({}, 204)
+    
+        # OPTION 2 RETURN THE DELETED INSTANCE
+        # return make_response(found_song.to_dict(), 200)
+
     
 # HTTP DYNAMIC ROUTING
 # /song/:id
@@ -99,36 +138,16 @@ class SongByID(Resource):
 api.add_resource(SongByID, '/songs/<int:song_id>')
 
 
-
-# 10. ✅ Use our serializer to format our response to be cleaner
-    # 10.1 Query all of the songs, convert them to a dictionary with `to_dict` before setting them to a list.
-    # 10.2 Invoke `make_response`, pass it the song list along with a status of 200. Set `make_response` to a 
-    # `response` variable.
-    # 10.3 Return the `response` variable.
-    # 10.4 After building the route, run the server and test your results in the browser.
- 
-# 11. ✅ Create a POST Route
-    # Prepare a POST request in Postman. Under the `Body` tab, select `form-data` and fill out the body 
-    # of a song request. 
-    
-    # Create the POST route 
-    # 📚 Review With Students: request object
-    
-    # 11.1 Create a `post` method and pass it `self`.
-    # 11.2 Create a new song from the `request.form` object.
-    # 11.3 Add and commit the new song.
-    # 11.4 Convert the new song to a dictionary with `to_dict`
-    # 11.5 Set `make_response` to a `response` variable and pass it the new song along with a status of 201.
-    # 11.6 Test the route in Postman.
-
-   
-# 12. ✅ Add the new route to our api with `api.add_resource`
-
-# 13. ✅ Create a GET (One) route
-    # 13.1 Build a class called `songByID` that inherits from `Resource`.
-    # 13.2 Create a `get` method and pass it the id along with `self`. (This is how we will gain access to 
-    # the id from our request)
-    # 13.3 Make a query for our song by the `id` and build a `response` to send to the browser.
+class Samples(Resource):
+    # ! INDEX
+    def get(self):
+        set_trace()
+        samples = [ s.to_dict() for s in Sample.query.all()]
+        return make_response(samples, 200)
 
 
-# 14. ✅ Add the new route to our api with `api.add_resource`
+api.add_resource(Samples, '/samples')
+
+@app.errorhandler(NotFound)
+def handle_not_found(err):
+    return make_response({"err": err.description}, 404)
