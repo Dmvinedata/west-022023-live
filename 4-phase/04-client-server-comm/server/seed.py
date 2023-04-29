@@ -10,7 +10,7 @@ with app.app_context():
     Sample.query.delete()
 
     print("Creating Songs...")
-    s1 = Song(title="Number 41", genre="Rock", length=120, plays=9)
+    s1 = Song(title="Number 41", genre="Pop", length=120, plays=9)
     s2 = Song(title="Mambo Number 6", genre="Funk", length=300, plays=400)
     s3 = Song(title="Never Gonna Give You Up", genre="Classic", length=500, plays=99999)
     s4 = Song(title="Rich Girl", genre="Yacht Rock", length=180, plays=5)
@@ -23,7 +23,7 @@ with app.app_context():
     sa1 = Sample(name="Big Kick",instrument="Bass Drum",length=100, volume=1.0, song_id=s1.id)
     sa2 = Sample(name="Trap Horns",instrument="Horn",length=5, volume=1.0, song_id=s2.id)
     sa3 = Sample(name="Damn Son, Where'd you find this",instrument="Vox",length=42, volume=1.0, song_id=s2.id)
-    sa4 = Sample(name="Orchestra Hit",instrument="Strings",length=1, volume=1.0, song_id=s3.id)
+    sa4 = Sample(name="Orchestra Hit",instrument="Strings",length=1, volume=100.0, song_id=s3.id)
 
     db.session.add_all([sa1,sa2,sa3,sa4])
     db.session.commit()

@@ -16,6 +16,7 @@ from flask_migrate import Migrate
 from flask_restful import Api, Resource
 from models import db, Song, Sample
 
+# from flask_cors import CORS
 from werkzeug.exceptions import NotFound
 
 # Import CORS from flask_cors, invoke it and pass it app
@@ -23,6 +24,7 @@ from werkzeug.exceptions import NotFound
 
 
 app = Flask(__name__)
+# CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
@@ -41,6 +43,10 @@ class Songs(Resource):
     # ! INDEX ROUTE
     def get(self):
         songs = [s.to_dict() for s in Song.query.all()]
+        # songs = []
+        # for s in Song.query.all():
+            # songs.append("title": s.title, "genre": s.)
+        
         return make_response(songs, 200)
 
     # ! CREATE
@@ -48,11 +54,16 @@ class Songs(Resource):
         form_data = request.get_json()
         #4.✅ Add a try except, try to create a new song. 
         # If a ValueError is raised call abort with a 422 and pass it the validation errors.
-        new_song = Song(
-            title=form_data["title"],
-            genre=form_data["genre"],
-            length=int(form_data["length"]),
-        )
+        try: 
+            new_song = Song(
+                title=form_data["title"],
+                genre=form_data["genre"],
+                length=int(form_data["length"]),
+            )
+        except (NameError, ValueError) as err:
+            # set_trace()
+            abort(422, err.args[0])
+
         db.session.add(new_song)
         db.session.commit()
         return make_response(new_song.to_dict(), 201)
